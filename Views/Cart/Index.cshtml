@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Web_Ban_Sach.Models.CartItem>
+@{
+    ViewBag.Title = "Giỏ Hàng Của Bạn";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    decimal tongTien = Model.Sum(m => m.SoLuong * m.Book.GiaBan);
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-white py-3 border-bottom">
+        <h4 class="font-weight-bold text-dark m-0">
+            <i class="fas fa-shopping-cart text-primary mr-2"></i> Giỏ Hàng Của Bạn
+        </h4>
+    </div>
+
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-basket fa-4x text-muted mb-3"></i>
+                <h5>Giỏ hàng của bạn đang trống!</h5>
+                <p class="text-muted">Hãy chọn những cuốn sách yêu thích để thêm vào giỏ.</p>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-2">
+                    <i class="fas fa-arrow-left mr-1"></i> Mua sắm ngay
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 100px;">Hình ảnh</th>
+                            <th>Tên sách</th>
+                            <th class="text-center" style="width: 140px;">Đơn giá</th>
+                            <th class="text-center" style="width: 120px;">Số lượng</th>
+                            <th class="text-right" style="width: 150px;">Thành tiền</th>
+                            <th class="text-center" style="width: 60px;">Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var thanhTien = item.SoLuong * item.Book.GiaBan;
+                            <tr>
+                                <td class="align-middle text-center">
+                                    @if (!string.IsNullOrEmpty(item.Book.HinhAnh))
+                                    {
+                                        <img src="~/Images/@item.Book.HinhAnh" alt="@item.Book.TenSach" class="rounded" style="width: 60px; height: 80px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light p-2 rounded text-muted small"><i class="fas fa-book"></i></div>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    <h6 class="font-weight-bold mb-1">
+                                        <a href="@Url.Action("Details", "Book", new { id = item.MaSach })" class="text-dark">
+                                            @item.Book.TenSach
+                                        </a>
+                                    </h6>
+                                    <small class="text-muted">Mã sách: #@item.MaSach</small>
+                                </td>
+                                <td class="align-middle text-center font-weight-bold">
+                                    @string.Format("{0:N0} đ", item.Book.GiaBan)
+                                </td>
+                                <td class="align-middle text-center font-weight-bold">
+                                    @item.SoLuong
+                                </td>
+                                <td class="align-middle text-right text-danger font-weight-bold">
+                                    @string.Format("{0:N0} đ", thanhTien)
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a href="@Url.Action("RemoveFromCart", "Cart", new { id = item.MaSach })"
+                                       class="text-danger"
+                                       title="Xóa khỏi giỏ"
+                                       onclick="return confirm('Bạn có chắc muốn xóa cuốn sách này khỏi giỏ?');">
+                                        <i class="fas fa-trash-alt fa-lg"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i> Tiếp tục mua sách
+                    </a>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <div class="mb-2">
+                        <span class="text-muted">Tổng cộng thanh toán:</span>
+                        <span class="h4 text-danger font-weight-bold ml-2">@string.Format("{0:N0} đ", tongTien)</span>
+                    </div>
+                    <a href="@Url.Action("Checkout", "Order")" class="btn btn-success btn-lg px-4 shadow-sm">
+                        <i class="fas fa-check mr-1"></i> Tiến hành đặt hàng
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

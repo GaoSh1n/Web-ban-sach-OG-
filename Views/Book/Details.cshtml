@@ -1,0 +1,154 @@
+﻿@model Web_Ban_Sach.Models.Book
+
+@{
+    ViewBag.Title = Model.TenSach;
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    var relatedBooks = ViewBag.RelatedBooks as List<Web_Ban_Sach.Models.Book>;
+}
+
+<!-- Thanh điều hướng Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white shadow-sm py-2">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+        <li class="breadcrumb-item">
+            <a href="@Url.Action("Index", "Home", new { categoryId = Model.MaTheLoai })">
+                @(Model.Category != null ? Model.Category.TenTheLoai : "Thể loại")
+            </a>
+        </li>
+        <li class="breadcrumb-item active text-truncate" aria-current="page" style="max-width: 300px;">
+            @Model.TenSach
+        </li>
+    </ol>
+</nav>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+        <div class="row">
+            <!-- Cột trái: Ảnh bìa sách -->
+            <div class="col-md-5 text-center mb-4 mb-md-0 border-right">
+                <div class="p-3 bg-light rounded d-flex align-items-center justify-content-center" style="min-height: 350px;">
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                    {
+                        <img src="~/Images/@Model.HinhAnh" alt="@Model.TenSach" class="img-fluid rounded shadow-sm" style="max-height: 330px; object-fit: contain;" />
+                    }
+                    else
+                    {
+                        <div class="text-muted py-5">
+                            <i class="fas fa-book fa-5x text-secondary mb-3"></i>
+                            <div>Chưa có ảnh bìa</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Cột phải: Thông tin chi tiết & Đặt mua -->
+            <div class="col-md-7 pl-md-4">
+                <h3 class="font-weight-bold text-dark mb-2">@Model.TenSach</h3>
+
+                <p class="text-muted mb-2">
+                    Tác giả: <strong class="text-dark">@(Model.Author != null ? Model.Author.TenTacGia : "Chưa cập nhật")</strong>
+                </p>
+                <p class="text-muted mb-3">
+                    Thể loại: <span class="badge badge-info">@(Model.Category != null ? Model.Category.TenTheLoai : "Chưa cập nhật")</span>
+                </p>
+
+                <!-- Giá bán -->
+                <div class="p-3 bg-light rounded mb-3">
+                    <span class="text-muted small d-block">Giá bán:</span>
+                    <span class="text-danger font-weight-bold h3 mb-0">
+                        @string.Format("{0:N0} đ", Model.GiaBan)
+                    </span>
+                </div>
+
+                <!-- Tình trạng kho -->
+                <p class="mb-3">
+                    Tình trạng:
+                    @if (Model.SoLuongTon > 0)
+                    {
+                        <span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i>Còn hàng (@Model.SoLuongTon cuốn)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger"><i class="fas fa-times-circle mr-1"></i>Tạm hết hàng</span>
+                    }
+                </p>
+
+                <!-- Form chọn số lượng & nút Mua -->
+                @if (Model.SoLuongTon > 0)
+                {
+                    using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "mt-4" }))
+                    {
+                        @Html.Hidden("id", Model.MaSach)
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="quantity">Số lượng</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Số lượng</span>
+                                    </div>
+                                    <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" max="@Model.SoLuongTon" style="width: 80px;" />
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-cart-plus mr-1"></i> Thêm vào giỏ hàng
+                                </button>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Home")" class="text-secondary small">
+                        <i class="fas fa-arrow-left mr-1"></i> Quay lại danh sách sách
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Mô tả nội dung sách -->
+        <div class="row">
+            <div class="col-12">
+                <h5 class="font-weight-bold text-dark border-bottom pb-2 mb-3">
+                    <i class="fas fa-align-left text-primary mr-2"></i> Mô Tả Sách
+                </h5>
+                <div class="text-secondary" style="line-height: 1.8;">
+                    @if (!string.IsNullOrEmpty(Model.MoTa))
+                    {
+                        @Html.Raw(Model.MoTa.Replace("\n", "<br />"))
+                    }
+                    else
+                    {
+                        <em>Chưa có mô tả chi tiết cho cuốn sách này.</em>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Phần gợi ý: Sách cùng thể loại -->
+@if (relatedBooks != null && relatedBooks.Any())
+{
+    <h5 class="font-weight-bold text-dark mb-3">
+        <i class="fas fa-tags text-warning mr-1"></i> Sách Cùng Thể Loại
+    </h5>
+    <div class="row">
+        @foreach (var item in relatedBooks)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm border-0 p-2">
+                    <div class="card-body p-2 d-flex flex-column">
+                        <h6 class="font-weight-bold mb-1 text-truncate" title="@item.TenSach">
+                            <a href="@Url.Action("Details", "Book", new { id = item.MaSach })" class="text-dark">@item.TenSach</a>
+                        </h6>
+                        <span class="text-danger font-weight-bold small mb-2">@string.Format("{0:N0} đ", item.GiaBan)</span>
+                        <a href="@Url.Action("Details", "Book", new { id = item.MaSach })" class="btn btn-sm btn-outline-primary mt-auto">Xem sách</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

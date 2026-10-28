@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Nhà Sách Online</title>
+
+    <!-- CSS Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <!-- CSS tùy biến riêng -->
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+    <!-- 1. HEADER & NAVBAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand font-weight-bold text-warning" href="@Url.Action("Index", "Home")">
+                    <i class="fas fa-book-open"></i> BOOKSTORE
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- Thanh tìm kiếm sách -->
+                    <form class="form-inline mx-auto my-2 my-lg-0 w-50" action="@Url.Action("Index", "Home")" method="get">
+                    </form>
+
+                    <!-- Menu bên phải: Giỏ hàng & Tài khoản -->
+                    <ul class="navbar-nav ml-auto align-items-center">
+                        <!-- Icon Giỏ hàng -->
+                        <li class="nav-item mr-3">
+                            <a class="nav-link btn btn-outline-light position-relative px-3" href="@Url.Action("Index", "Cart")">
+                                <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                                <span class="badge badge-pill badge-danger position-absolute" style="top: -5px; right: -5px;">
+                                    @(Session["CartCount"] ?? 0)
+                                </span>
+                            </a>
+                        </li>
+
+                        <!-- Tài khoản Khách hàng -->
+                        @if (Session["Customer"] != null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i> @Session["CustomerName"]
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="@Url.Action("OrderHistory", "Order")">Đơn mua của tôi</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-danger" href="@Url.Action("Logout", "Account")">Đăng xuất</a>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="@Url.Action("Login", "Account")">
+                                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="@Url.Action("Register", "Account")">
+                                    <i class="fas fa-user-plus"></i> Đăng ký
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 2. PHẦN THÂN TRANG (CONTAINER CHIA 2 CỘT) -->
+    <main class="container my-4 flex-grow-1">
+        <div class="row">
+            <!-- Cột trái (3 phần): Danh mục thể loại -->
+            <aside class="col-lg-3 col-md-4 mb-4">
+                @Html.Action("CategoryPartial", "Home")
+            </aside>
+
+            <!-- Cột phải (9 phần): Nội dung thay đổi của từng trang con (Index, Details...) -->
+            <section class="col-lg-9 col-md-8">
+                @RenderBody()
+            </section>
+        </div>
+    </main>
+
+    <!-- 3. FOOTER -->
+    <footer class="bg-white border-top py-4 mt-auto">
+        <div class="container text-center text-muted">
+            <p class="mb-1">&copy; @DateTime.Now.Year - Đồ Án Website Bán Sách Online (ASP.NET MVC)</p>
+            <small>Khoa Công Nghệ Thông Tin</small>
+        </div>
+    </footer>
+
+    <!-- Scripts jQuery & Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
