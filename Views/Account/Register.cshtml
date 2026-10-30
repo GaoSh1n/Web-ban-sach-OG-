@@ -1,0 +1,79 @@
+﻿@model Web_Ban_Sach.Models.Customer
+
+@{
+    ViewBag.Title = "Đăng Ký Tài Khoản";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+<style>
+    /* Ép ô nhập liệu rộng 100% bằng với nút bấm */
+    .card-body input,
+    .card-body textarea,
+    .card-body .form-control {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0 my-3">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="font-weight-bold mb-0"><i class="fas fa-user-plus mr-2"></i>Đăng Ký Tài Khoản</h4>
+            </div>
+            <div class="card-body p-4">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> @ViewBag.Error
+                    </div>
+                }
+
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <label class="font-weight-bold">Họ và tên <span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", @placeholder = "Nhập Họ và tên", @required = "required" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tên tài khoản (Username) <span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.TenTaiKhoan, new { @class = "form-control", @placeholder = "Tên đăng nhập viết liền không dấu", @required = "required" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Mật khẩu <span class="text-danger">*</span></label>
+                        @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control", @placeholder = "Nhập mật khẩu", @required = "required" })
+                    </div>
+
+                    <!-- Xác nhận mật khẩu -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                        <input type="password" name="NhapLaiMatKhau" class="form-control" placeholder="Nhập lại mật khẩu" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Số điện thoại</label>
+                        @Html.TextBoxFor(m => m.DienThoai, new { @class = "form-control", @placeholder = "Nhập Số điện thoại" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Email</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "Nhập mail của bạn" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Địa chỉ giao hàng mặc định</label>
+                        @Html.TextAreaFor(m => m.DiaChi, new { @class = "form-control", @rows = "2", @placeholder = "Nhập địa chỉ của bạn" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block py-2 font-weight-bold mt-4 shadow-sm">
+                        <i class="fas fa-check-circle mr-1"></i> Hoàn Tất Đăng Ký
+                    </button>
+                }
+            </div>
+            <div class="card-footer bg-light text-center py-3">
+                <span class="text-muted">Đã có tài khoản? </span>
+                <a href="@Url.Action("Login", "Account")" class="font-weight-bold text-primary">Đăng nhập tại đây</a>
+            </div>
+        </div>
+    </div>
+</div>
