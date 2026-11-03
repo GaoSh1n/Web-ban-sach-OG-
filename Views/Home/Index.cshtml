@@ -36,7 +36,11 @@ else
                     <div class="bg-light text-center p-3" style="height: 220px; display: flex; align-items: center; justify-content: center;">
                         @if (!string.IsNullOrEmpty(item.HinhAnh))
                         {
-                            <img src="~/Images/@item.HinhAnh" alt="@item.TenSach" class="img-fluid" style="max-height: 100%; object-fit: contain;" />
+                            string imgUrl = item.HinhAnh.StartsWith("http")
+                             ? item.HinhAnh.Trim()
+                             : Url.Content("~/Images/" + System.IO.Path.GetFileName(item.HinhAnh.Trim()));
+
+                            <img src="@imgUrl" class="card-img-top p-3" style="height: 220px; object-fit: contain;" alt="@item.TenSach" />
                         }
                         else
                         {

@@ -21,6 +21,7 @@
         <AssociationConnector Association="DBWebBanSachModel.FK_CartItem_Cart" ManuallyRouted="false" />
         <AssociationConnector Association="DBWebBanSachModel.FK_Order_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="DBWebBanSachModel.FK_OrderDetail_Order" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DBWebBanSachModel.AdminUser" Width="1.5" PointX="10.5" PointY="1.125" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

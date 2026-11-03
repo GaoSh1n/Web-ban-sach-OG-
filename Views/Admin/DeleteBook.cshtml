@@ -1,0 +1,71 @@
+﻿@model Web_Ban_Sach.Models.Book
+
+@{
+    ViewBag.Title = "Xác Nhận Xóa Sách";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="row justify-content-center my-4">
+    <div class="col-lg-6 col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-danger text-white py-3">
+                <h5 class="mb-0 font-weight-bold">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Xác Nhận Xóa Sách #@Model.MaSach
+                </h5>
+            </div>
+            <div class="card-body p-4 bg-white">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-warning font-weight-bold">
+                        <i class="fas fa-info-circle mr-1"></i> @ViewBag.Error
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-3">
+                        Bạn có chắc chắn muốn xóa vĩnh viễn cuốn sách này khỏi kho không? Hành động này không thể hoàn tác.
+                    </p>
+                }
+
+                <div class="bg-light p-3 rounded border mb-4">
+                    <div class="row mb-2">
+                        <div class="col-4 text-muted font-weight-bold">Tên sách:</div>
+                        <div class="col-8 font-weight-bold text-dark">@Model.TenSach</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4 text-muted font-weight-bold">Tác giả:</div>
+                        <div class="col-8">@(Model.Author != null ? Model.Author.TenTacGia : "Chưa rõ")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4 text-muted font-weight-bold">Thể loại:</div>
+                        <div class="col-8">@(Model.Category != null ? Model.Category.TenTheLoai : "Chưa phân loại")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-4 text-muted font-weight-bold">Giá bán:</div>
+                        <div class="col-8 text-danger font-weight-bold">@string.Format("{0:N0} đ", Model.GiaBan)</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 text-muted font-weight-bold">Tồn kho:</div>
+                        <div class="col-8">@Model.SoLuongTon cuốn</div>
+                    </div>
+                </div>
+
+                @using (Html.BeginForm("DeleteBook", "Admin", new { id = Model.MaSach }, FormMethod.Post))
+                {
+                    <div class="d-flex justify-content-end">
+                        <a href="@Url.Action("Books", "Admin")" class="btn btn-secondary mr-2 px-4">
+                            <i class="fas fa-arrow-left mr-1"></i> Hủy & Quay lại
+                        </a>
+                        @if (ViewBag.Error == null)
+                        {
+                            <button type="submit" class="btn btn-danger font-weight-bold px-4">
+                                <i class="fas fa-trash-alt mr-1"></i> Xác Nhận Xóa
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

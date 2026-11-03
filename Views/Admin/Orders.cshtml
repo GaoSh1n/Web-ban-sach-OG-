@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Web_Ban_Sach.Models.Order>
+@{
+    ViewBag.Title = "Quản Lý Đơn Hàng";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 font-weight-bold text-primary">
+            <i class="fas fa-clipboard-list mr-2"></i>Danh Sách Đơn Đặt Hàng
+        </h5>
+        <span class="badge badge-secondary px-3 py-2 font-weight-normal">Tổng: @Model.Count() đơn</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered mb-0 text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="width: 80px;">Mã đơn</th>
+                        <th class="text-left">Khách hàng & Địa chỉ</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Giao hàng</th>
+                        <th style="width: 320px;">Cập nhật trạng thái</th>
+                        <th style="width: 100px;">Chi tiết</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle font-weight-bold text-primary">#@item.MaDonHang</td>
+                            <td class="align-middle text-left">
+                                <strong>@(item.Customer != null ? item.Customer.HoTen : "Khách vãng lai")</strong><br />
+                                <small class="text-muted"><i class="fas fa-phone mr-1"></i>@(item.Customer != null ? item.Customer.DienThoai : "---")</small><br />
+                                <small class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i>@(string.IsNullOrEmpty(item.DiaChiGiao) ? (item.Customer != null ? item.Customer.DiaChi : "Chưa có địa chỉ") : item.DiaChiGiao)</small>
+                            </td>
+                            <td class="align-middle">
+                                @(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("dd/MM/yyyy HH:mm") : "---")
+                            </td>
+                            <td class="align-middle font-weight-bold text-danger">
+                                @string.Format("{0:N0} đ", item.TongTien)
+                            </td>
+                            <td class="align-middle">
+                                @if (item.DaThanhToan == true)
+                                {
+                                    <span class="text-success font-weight-bold">
+                                        <i >Đã thanh toán</i>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">
+                                        <i>Chưa thanh toán</i>
+                                     </span>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @switch (item.TinhTrangGiaoHang)
+                                {
+                                    case 0:
+                                        <span class="text-warning font-weight-bold">
+                                            <i>Chờ xử lý</i>
+                                        </span>
+
+                                        break;
+                                    case 1:
+                                        <span class="text-info font-weight-bold">
+                                            <i>Đã xử lý</i>
+                                        </span>
+                                        break;
+                                    case 2:
+                                        <span class="text-primary font-weight-bold">
+                                            <i>Đang giao hàng</i>
+                                        </span>
+                                        break;
+                                    case 3:
+                                        <span class="text-success font-weight-bold">
+                                            <i>Giao thành công</i>
+                                        </span>
+                                        break;
+                                    default:
+                                        <span class="text-muted">Chờ xử lý</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="align-middle">
+                                @using (Html.BeginForm("UpdateOrderStatus", "Admin", FormMethod.Post, new { @class = "d-flex align-items-center justify-content-center" }))
+                                {
+                                    <input type="hidden" name="maDonHang" value="@item.MaDonHang" />
+
+                                    <select name="daThanhToan" class="form-control form-control-sm mr-1" style="width: 110px;">
+                                        <option value="false" @(item.DaThanhToan != true ? "selected" : "")>Chưa TT</option>
+                                        <option value="true" @(item.DaThanhToan == true ? "selected" : "")>Đã TT</option>
+                                    </select>
+
+                                    <select name="tinhTrangGiaoHang" class="form-control form-control-sm mr-2" style="width: 140px;">
+                                        <option value="0" @(item.TinhTrangGiaoHang == 0 ? "selected" : "")>0 - Chờ xử lý</option>
+                                        <option value="1" @(item.TinhTrangGiaoHang == 1 ? "selected" : "")>1 - Đã xử lý</option>
+                                        <option value="2" @(item.TinhTrangGiaoHang == 2 ? "selected" : "")>2 - Đang giao</option>
+                                        <option value="3" @(item.TinhTrangGiaoHang == 3 ? "selected" : "")>3 - Thành công</option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-sm btn-success font-weight-bold px-2">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                <a href="@Url.Action("OrderDetail", "Admin", new { id = item.MaDonHang })" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-eye"></i> Xem
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>0

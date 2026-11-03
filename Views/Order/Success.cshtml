@@ -1,0 +1,98 @@
+﻿@model Web_Ban_Sach.Models.Order
+
+@{
+    ViewBag.Title = "Đặt Hàng Thành Công";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+
+    string method = ViewBag.PaymentMethod as string ?? "COD";
+
+    // Cấu hình VietQR
+    string bankId = "VCB";
+    string accountNo = "1829423295";
+    string accountName = Uri.EscapeDataString("NGUYEN QUANG DUNG");
+    long amount = Convert.ToInt64(Model.TongTien);
+    string addInfo = Uri.EscapeDataString("DH" + Model.MaDonHang);
+    string qrUrl = $"https://img.vietqr.io/image/{bankId}-{accountNo}-compact2.png?amount={amount}&addInfo={addInfo}&accountName={accountName}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-8">
+        <div class="card shadow-sm border-0 my-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center text-success mb-4">
+                    <i class="fas fa-check-circle fa-4x"></i>
+                    <h3 class="font-weight-bold text-dark mt-2">Đặt Hàng Thành Công!</h3>
+                    <p class="text-muted">Mã đơn hàng: <strong class="text-primary">#@Model.MaDonHang</strong></p>
+                </div>
+
+                @if (method == "VietQR")
+                {
+                    <!-- Khung quét mã nếu chọn VietQR -->
+                    <div class="card bg-light border-0 shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white text-center font-weight-bold py-2">
+                            <i class="fas fa-qrcode mr-2"></i> Quét Mã VietQR Để Thanh Toán
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <p class="small text-muted mb-3">
+                                Mở app ngân hàng bất kỳ để quét mã (tiền và nội dung chuyển khoản đã được điền sẵn):
+                            </p>
+                            <div class="d-inline-block bg-white p-2 rounded shadow-sm border">
+                                <img src="@qrUrl" alt="VietQR" class="img-fluid" style="max-width: 300px;" />
+                            </div>
+                            <div class="row justify-content-center mt-3 text-left">
+                                <div class="col-md-8 small bg-white p-3 rounded border">
+                                    <div><strong>Ngân hàng:</strong> Vietcombank (VCB)</div>
+                                    <div><strong>STK:</strong> <span class="text-danger font-weight-bold">1829423295</span></div>
+                                    <div><strong>Chủ TK:</strong> NGUYEN QUANG DUNG</div>
+                                    <div><strong>Số tiền:</strong> <span class="text-danger font-weight-bold">@string.Format("{0:N0} đ", Model.TongTien)</span></div>
+                                    <div><strong>Nội dung CK:</strong> @(Model.MaDonHang)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <!-- Chi tiết đơn hàng và trạng thái -->
+                <div class="bg-light p-3 rounded border small mb-4">
+                    <div class="row mb-2">
+                        <div class="col-5 text-muted">Trạng thái đơn:</div>
+                        <div class="col-7">
+                            @switch (Model.TinhTrangGiaoHang)
+                            {
+                                case 0:
+                                    <span class="badge badge-warning text-dark">Chờ xử lý</span>
+                                    break;
+                                case 1:
+                                    <span class="badge badge-info">Đã xử lý</span>
+                                    break;
+                                case 2:
+                                    <span class="badge badge-primary">Đang giao hàng</span>
+                                    break;
+                                case 3:
+                                    <span class="badge badge-success">Giao hàng thành công</span>
+                                    break;
+                                default:
+                                    <span class="badge badge-secondary">Chờ xử lý</span>
+                                    break;
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 text-muted">Phương thức thanh toán:</div>
+                        <div class="col-7 font-weight-bold">@(method == "VietQR" ? "Chuyển khoản VietQR" : "Thanh toán khi nhận hàng (COD)")</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-5 text-muted">Tổng tiền:</div>
+                        <div class="col-7 font-weight-bold text-danger h6 mb-0">@string.Format("{0:N0} đ", Model.TongTien)</div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary px-4">
+                        <i class="fas fa-shopping-bag mr-1"></i> Tiếp tục mua sắm
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

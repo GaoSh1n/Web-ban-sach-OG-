@@ -1,0 +1,157 @@
+﻿@model Web_Ban_Sach.Models.Book
+
+@{
+    ViewBag.Title = "Thêm Sách Mới";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <!-- Thông báo thêm thành công hoặc trùng lặp -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle mr-1"></i> @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle mr-1"></i> @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-success text-white py-3">
+                <h5 class="mb-0 font-weight-bold">
+                    <i class="fas fa-plus-circle mr-2"></i>Thêm Sách Mới Vào Kho
+                </h5>
+            </div>
+            <div class="card-body p-4 bg-white">
+                @using (Html.BeginForm("CreateBook", "Admin", FormMethod.Post))
+                {
+                    <div class="row">
+                        <!-- Tên sách -->
+                        <div class="col-md-6 form-group">
+                            <label class="font-weight-bold">Tên sách <span class="text-danger">*</span></label>
+                            @Html.TextBoxFor(m => m.TenSach, new { @class = "form-control", @placeholder = "Nhập tên cuốn sách...", @required = "required" })
+                        </div>
+
+                        <!-- Tác giả có nút Thêm Nhanh -->
+                        <div class="col-md-6 form-group">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="font-weight-bold mb-0">Tác giả <span class="text-danger">*</span></label>
+                                <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 font-weight-bold" data-toggle="modal" data-target="#modalAuthor">
+                                    <i class="fas fa-plus mr-1"></i>Tạo tác giả mới
+                                </button>
+                            </div>
+                            @Html.DropDownList("MaTacGia", null, "-- Chọn tác giả --", new { @class = "form-control", @required = "required" })
+                        </div>
+
+                        <!-- Thể loại có nút Thêm Nhanh -->
+                        <div class="col-md-4 form-group">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="font-weight-bold mb-0">Thể loại <span class="text-danger">*</span></label>
+                                <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 font-weight-bold" data-toggle="modal" data-target="#modalCategory">
+                                    <i class="fas fa-plus mr-1"></i>Tạo thể loại mới
+                                </button>
+                            </div>
+                            @Html.DropDownList("MaTheLoai", null, "-- Chọn thể loại --", new { @class = "form-control", @required = "required" })
+                        </div>
+
+                        <!-- Giá bán -->
+                        <div class="col-md-4 form-group">
+                            <label class="font-weight-bold">Giá bán (VNĐ) <span class="text-danger">*</span></label>
+                            @Html.TextBoxFor(m => m.GiaBan, new { @class = "form-control", @type = "number", @min = "0", @placeholder = "Ví dụ: 125000", @required = "required" })
+                        </div>
+
+                        <!-- Số lượng tồn kho -->
+                        <div class="col-md-4 form-group">
+                            <label class="font-weight-bold">Số lượng tồn kho <span class="text-danger">*</span></label>
+                            @Html.TextBoxFor(m => m.SoLuongTon, new { @class = "form-control", @type = "number", @min = "0", @Value = "10", @required = "required" })
+                        </div>
+
+                        <!-- Hình ảnh -->
+                        <div class="col-md-12 form-group">
+                            <label class="font-weight-bold">Hình ảnh bìa (Tên file hoặc Link ảnh)</label>
+                            @Html.TextBoxFor(m => m.HinhAnh, new { @class = "form-control", @placeholder = "Ví dụ: clean-code.jpg hoặc https://..." })
+                        </div>
+
+                        <!-- Mô tả -->
+                        <div class="col-md-12 form-group mb-4">
+                            <label class="font-weight-bold">Mô tả nội dung</label>
+                            @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", @rows = "4", @placeholder = "Nhập tóm tắt nội dung sách..." })
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end border-top pt-3">
+                        <a href="@Url.Action("Books", "Admin")" class="btn btn-secondary mr-2 px-4">
+                            <i class="fas fa-arrow-left mr-1"></i> Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-success font-weight-bold px-4">
+                            <i class="fas fa-save mr-1"></i> Lưu Sách Mới
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Nhanh Tác Giả -->
+<div class="modal fade" id="modalAuthor" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow">
+            @using (Html.BeginForm("QuickCreateAuthor", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" name="returnUrl" value="@Request.RawUrl" />
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title font-weight-bold"><i class="fas fa-user-edit mr-2 text-warning"></i>Thêm Tác Giả Mới</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold">Tên tác giả <span class="text-danger">*</span></label>
+                        <input type="text" name="tenTacGia" class="form-control" placeholder="Nhập họ và tên tác giả..." required autofocus />
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-success font-weight-bold px-3">
+                        <i class="fas fa-check mr-1"></i> Lưu Tác Giả
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Nhanh Thể Loại -->
+<div class="modal fade" id="modalCategory" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow">
+            @using (Html.BeginForm("QuickCreateCategory", "Admin", FormMethod.Post))
+            {
+                <input type="hidden" name="returnUrl" value="@Request.RawUrl" />
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title font-weight-bold"><i class="fas fa-tags mr-2 text-warning"></i>Thêm Thể Loại Mới</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold">Tên thể loại <span class="text-danger">*</span></label>
+                        <input type="text" name="tenTheLoai" class="form-control" placeholder="Ví dụ: Khoa Học Viễn Tưởng, Tâm Lý Học..." required autofocus />
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-success font-weight-bold px-3">
+                        <i class="fas fa-check mr-1"></i> Lưu Thể Loại
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

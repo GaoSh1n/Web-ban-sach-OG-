@@ -1,0 +1,81 @@
+﻿@model Web_Ban_Sach.Models.Order
+@{
+    ViewBag.Title = "Chi Tiết Đơn Hàng #" + Model.MaDonHang;
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 font-weight-bold">
+                    <i class="fas fa-file-invoice mr-2 text-warning"></i>Chi Tiết Đơn Hàng #@Model.MaDonHang
+                </h5>
+                <a href="@Url.Action("Orders", "Admin")" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-left mr-1"></i> Quay Lại Danh Sách
+                </a>
+            </div>
+            <div class="card-body p-4 bg-white">
+                <!-- Thông tin khách & giao hàng -->
+                <div class="row mb-4">
+                    <div class="col-md-6 border-right">
+                        <h6 class="font-weight-bold text-primary mb-3">THÔNG TIN KHÁCH HÀNG</h6>
+                        <p class="mb-1"><strong>Họ tên:</strong> @(Model.Customer != null ? Model.Customer.HoTen : "Khách vãng lai")</p>
+                        <p class="mb-1"><strong>Số điện thoại:</strong> @(Model.Customer != null ? Model.Customer.DienThoai : "---")</p>
+                        <p class="mb-1"><strong>Email:</strong> @(Model.Customer != null ? Model.Customer.Email : "---")</p>
+                    </div>
+                    <div class="col-md-6 pl-md-4">
+                        <h6 class="font-weight-bold text-primary mb-3">THÔNG TIN ĐƠN HÀNG</h6>
+                        <p class="mb-1"><strong>Ngày đặt:</strong> @(Model.NgayDat.HasValue ? Model.NgayDat.Value.ToString("dd/MM/yyyy HH:mm") : "---")</p>
+                        <p class="mb-1"><strong>Địa chỉ nhận:</strong> @(string.IsNullOrEmpty(Model.DiaChiGiao) ? (Model.Customer != null ? Model.Customer.DiaChi : "Chưa cập nhật") : Model.DiaChiGiao)</p>
+                        <p class="mb-1">
+                            <strong>Trạng thái thanh toán:</strong>
+                            @(Model.DaThanhToan == true ? "Đã thanh toán" : "Chưa thanh toán")
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Danh sách sách đã đặt -->
+                <h6 class="font-weight-bold text-primary mb-3">DANH SÁCH MẶT HÀNG</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Mã sách</th>
+                                <th class="text-left">Tên sách</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.OrderDetails != null)
+                            {
+                                foreach (var detail in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td class="align-middle">#@detail.MaSach</td>
+                                        <td class="align-middle text-left font-weight-bold">
+                                            @(detail.Book != null ? detail.Book.TenSach : "Sách không tồn tại")
+                                        </td>
+                                        <td class="align-middle">@string.Format("{0:N0} đ", detail.DonGia)</td>
+                                        <td class="align-middle">@detail.SoLuong</td>
+                                        <td class="align-middle font-weight-bold text-danger">
+                                            @string.Format("{0:N0} đ", detail.DonGia * detail.SoLuong)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-right font-weight-bold">TỔNG CỘNG TIỀN ĐƠN HÀNG:</th>
+                                <th class="text-danger font-weight-bold h5 mb-0">@string.Format("{0:N0} đ", Model.TongTien)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

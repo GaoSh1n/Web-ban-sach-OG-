@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Web_Ban_Sach.Models.Order>
+
+@{
+    ViewBag.Title = "Đơn Mua Của Tôi";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 font-weight-bold">
+            <i class="fas fa-shopping-bag mr-2"></i> Lịch Sử Đơn Mua
+        </h5>
+        <span class="badge bg-light text-dark font-weight-bold">Tổng: @Model.Count() đơn hàng</span>
+    </div>
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-receipt fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">Bạn chưa có đơn đặt hàng nào.</h5>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">
+                    <i class="fas fa-book-open mr-1"></i> Khám phá mua sách ngay
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-center">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="py-3">Mã đơn</th>
+                            <th class="py-3">Ngày đặt</th>
+                            <th class="py-3">Tổng tiền</th>
+                            <th class="py-3">Trạng thái giao hàng</th>
+                            <th class="py-3">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="font-weight-bold text-primary align-middle">
+                                    #@item.MaDonHang
+                                </td>
+                                <td class="align-middle">
+                                    @string.Format("{0:dd/MM/yyyy HH:mm}", item.NgayDat)
+                                </td>
+                                <td class="font-weight-bold text-danger align-middle">
+                                    @string.Format("{0:N0} đ", item.TongTien)
+                                </td>
+                                <td class="align-middle">
+                                    @switch (item.TinhTrangGiaoHang)
+                                    {
+                                        case 0:
+                                            <span class="badge bg-warning text-dark px-2 py-1">Chờ xử lý</span>
+                                            break;
+                                        case 1:
+                                            <span class="badge bg-info px-2 py-1">Đã xử lý</span>
+                                            break;
+                                        case 2:
+                                            <span class="badge bg-primary px-2 py-1">Đang giao hàng</span>
+                                            break;
+                                        case 3:
+                                            <span class="badge bg-success px-2 py-1">Giao hàng thành công</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary px-2 py-1">Chờ xử lý</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    <!-- Nút xem lại chi tiết / quét lại mã VietQR -->
+                                    <a href="@Url.Action("Success", "Order", new { id = item.MaDonHang, method = "VietQR" })"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye mr-1"></i> Chi tiết / QR
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

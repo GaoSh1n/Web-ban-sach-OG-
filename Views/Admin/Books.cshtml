@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Web_Ban_Sach.Models.Book>
+
+@{
+    ViewBag.Title = "Quản Lý Kho Sách";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+        <h5 class="mb-0 font-weight-bold text-primary">
+            <i class="fas fa-book mr-2"></i>Danh Sách Sách Trong Kho
+        </h5>
+        <a href="@Url.Action("CreateBook", "Admin")" class="btn btn-success btn-sm font-weight-bold px-3">
+            <i class="fas fa-plus mr-1"></i> Thêm Sách Mới
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered mb-0 text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Mã</th>
+                        <th class="text-left">Tên sách</th>
+                        <th>Tác giả</th>
+                        <th>Thể loại</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
+                        <th style="width: 180px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle font-weight-bold">#@item.MaSach</td>
+                            <td class="align-middle text-left font-weight-bold">@item.TenSach</td>
+                            <td class="align-middle">@(item.Author != null ? item.Author.TenTacGia : "Chưa rõ")</td>
+                            <td class="align-middle">@(item.Category != null ? item.Category.TenTheLoai : "Chưa phân loại")</td>
+                            <td class="align-middle text-danger font-weight-bold">@string.Format("{0:N0} đ", item.GiaBan)</td>
+                            <td class="align-middle">
+                                @if (item.SoLuongTon > 0)
+                                {
+                                    <span class="badge badge-success px-2 py-1">@item.SoLuongTon</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger px-2 py-1">Hết hàng (0)</span>
+                                }
+                            </td>
+                            <td class="align-middle">
+                                <a href="@Url.Action("EditBook", "Admin", new { id = item.MaSach })" class="btn btn-primary btn-sm mr-1">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                                <a href="@Url.Action("DeleteBook", "Admin", new { id = item.MaSach })"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này không?');">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

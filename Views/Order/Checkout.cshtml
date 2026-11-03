@@ -1,0 +1,108 @@
+﻿@model Web_Ban_Sach.Models.Order
+
+@{
+    ViewBag.Title = "Xác Nhận Đặt Hàng";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    var cartItems = ViewBag.CartItems as List<Web_Ban_Sach.Models.CartItem>;
+    decimal totalAmount = ViewBag.TotalAmount != null ? (decimal)ViewBag.TotalAmount : 0;
+}
+
+<div class="row">
+    <!-- Cột trái: Thông tin nhận hàng -->
+    <div class="col-lg-7 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0 font-weight-bold">
+                    <i class="fas fa-shipping-fast mr-2"></i> Thông Tin Giao Hàng
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                @using (Html.BeginForm("Checkout", "Order", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        <label class="font-weight-bold">Họ tên người nhận</label>
+                        <input type="text" class="form-control" value="@Session["CustomerName"]" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Số điện thoại liên hệ <span class="text-danger">*</span></label>
+                        <input type="text" name="DienThoaiNhan" class="form-control"
+                               value="@(Session["Customer"] != null ? ((Web_Ban_Sach.Models.Customer)Session["Customer"]).DienThoai : "")"
+                               placeholder="Số điện thoại nhận hàng" required />
+                    </div>
+
+                    <!-- Địa chỉ nhận hàng -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+                        <textarea name="DiaChiNhan" class="form-control" rows="3"
+                                  placeholder="Ghi rõ số nhà, tên đường, phường/xã..." required>@(Session["Customer"] != null ? ((Web_Ban_Sach.Models.Customer)Session["Customer"]).DiaChi : "")</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold">Phương thức thanh toán</label>
+                        <div class="p-3 border rounded bg-light">
+                            <!-- 1. Thanh toán COD -->
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="COD" checked>
+                                <label class="form-check-label font-weight-bold text-dark" for="cod">
+                                    <i class="fas fa-money-bill-wave text-success me-2"></i> Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+
+                            <!-- 2. Thanh toán quét mã QR -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="vietqr" value="VietQR">
+                                <label class="form-check-label font-weight-bold text-dark" for="vietqr">
+                                    <i class="fas fa-qrcode text-primary me-2"></i> Thanh toán bằng mã QR
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block py-2 font-weight-bold mt-4 shadow-sm">
+                        <i class="fas fa-check-circle mr-1"></i> Xác Nhận & Đặt Hàng Ngay
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Cột phải: Tóm tắt đơn hàng -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-light py-3 border-bottom">
+                <h5 class="mb-0 font-weight-bold text-dark">
+                    <i class="fas fa-receipt mr-2 text-primary"></i> Đơn Hàng Của Bạn
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @if (cartItems != null)
+                    {
+                        foreach (var item in cartItems)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <h6 class="my-0 font-weight-bold text-truncate" style="max-width: 220px;" title="@item.Book.TenSach">
+                                        @item.Book.TenSach
+                                    </h6>
+                                    <small class="text-muted">SL: @item.SoLuong x @string.Format("{0:N0} đ", item.Book.GiaBan)</small>
+                                </div>
+                                <span class="font-weight-bold text-dark">
+                                    @string.Format("{0:N0} đ", item.SoLuong * item.Book.GiaBan)
+                                </span>
+                            </li>
+                        }
+                    }
+                    <li class="list-group-item d-flex justify-content-between bg-light py-3">
+                        <span class="font-weight-bold">Tổng thanh toán:</span>
+                        <strong class="text-danger h5 mb-0 font-weight-bold">@string.Format("{0:N0} đ", totalAmount)</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-secondary btn-block">
+            <i class="fas fa-edit mr-1"></i> Chỉnh sửa lại giỏ hàng
+        </a>
+    </div>
+</div>
