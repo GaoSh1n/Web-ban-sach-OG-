@@ -19,23 +19,54 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
             <div class="container-fluid">
                 <!-- Logo -->
-                <a class="navbar-brand font-weight-bold text-warning" href="@Url.Action("Index", "Home")">
+                <a class="navbar-brand font-weight-bold text-warning mr-lg-3" href="@Url.Action("Index", "Home")">
                     <i class="fas fa-book-open"></i> BOOKSTORE
                 </a>
 
+                <!-- Menu Trang chủ & Đơn hàng của tôi (Desktop) -->
+                <div class="d-none d-lg-flex align-items-center">
+                    <a class="nav-link text-white font-weight-bold px-2" href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home mr-1"></i> Trang chủ
+                    </a>
+                    <a class="nav-link text-white font-weight-bold px-2 ml-2" href="@Url.Action("OrderHistory", "Order")">
+                        <i class="fas fa-receipt mr-1"></i> Đơn hàng của tôi
+                    </a>
+                </div>
+
+                <!-- Thanh tìm kiếm sách (Nằm ở giữa thanh navbar) -->
+                <form class="form-inline mx-auto my-1 flex-grow-1 flex-md-grow-0 px-2" style="max-width: 420px; width: 100%;" action="@Url.Action("Index", "Home")" method="get">
+                    <div class="input-group w-100">
+                        <input class="form-control" type="search" name="searchString" value="@Request.QueryString["searchString"]" placeholder="Tìm tên sách, tác giả..." aria-label="Tìm kiếm sách">
+                        <div class="input-group-append">
+                            <button class="btn btn-warning" type="submit" title="Tìm kiếm">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Nút Hamburger (---) -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <!-- Thanh tìm kiếm sách -->
-                    <form class="form-inline mx-auto my-2 my-lg-0 w-50" action="@Url.Action("Index", "Home")" method="get">
-                    </form>
+                <!-- Menu xổ xuống / Menu bên phải (Không chứa thanh tìm kiếm) -->
+                <div class="collapse navbar-collapse flex-grow-0" id="navbarContent">
+                    <ul class="navbar-nav align-items-center w-100">
+                        <!-- Nút Trang chủ & Đơn hàng của tôi (chỉ hiện trong menu xổ xuống khi ở màn hình nhỏ, căn giữa) -->
+                        <li class="nav-item d-lg-none w-100 text-center my-1">
+                            <a class="nav-link text-white font-weight-bold" href="@Url.Action("Index", "Home")">
+                                <i class="fas fa-home mr-1"></i> Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item d-lg-none w-100 text-center my-1">
+                            <a class="nav-link text-white font-weight-bold" href="@Url.Action("OrderHistory", "Order")">
+                                <i class="fas fa-receipt mr-1"></i> Đơn hàng của tôi
+                            </a>
+                        </li>
 
-                    <!-- Menu bên phải: Giỏ hàng & Tài khoản -->
-                    <ul class="navbar-nav ml-auto align-items-center">
                         <!-- Icon Giỏ hàng -->
-                        <li class="nav-item mr-3">
+                        <li class="nav-item mr-lg-3 my-1">
                             <a class="nav-link btn btn-outline-light position-relative px-3" href="@Url.Action("Index", "Cart")">
                                 <i class="fas fa-shopping-cart"></i> Giỏ hàng
                                 <span class="badge badge-pill badge-danger position-absolute" style="top: -5px; right: -5px;">
@@ -95,6 +126,7 @@
     <!-- 3. FOOTER -->
     <footer class="bg-white border-top py-4 mt-auto">
         <div class="container text-center text-muted">
+            <a class="mb-1" href="@Url.Action("Login","Admin")">Đăng nhập cho nhân viên</a>
             <p class="mb-1">&copy; @DateTime.Now.Year - Đồ Án Website Bán Sách Online (ASP.NET MVC)</p>
             <small>Khoa Công Nghệ Thông Tin</small>
         </div>

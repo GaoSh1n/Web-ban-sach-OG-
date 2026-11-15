@@ -12,9 +12,9 @@ namespace Web_Ban_Sach.Controllers
 
         private DBWebBanSachEntities db = new DBWebBanSachEntities();
         [HttpGet]
-        public ActionResult Index(int? categoryId)
+        public ActionResult Index(int? categoryId, string searchString)
         {
-            var books = db.Books.Include("Category").AsQueryable();
+            var books = db.Books.Include("Category").Include("Author").AsQueryable();
 
             if (categoryId.HasValue)
             {
@@ -28,11 +28,19 @@ namespace Web_Ban_Sach.Controllers
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                searchString = searchString.Trim();
+                books = books.Where(b => b.TenSach.Contains(searchString) || b.Author.TenTacGia.Contains(searchString));
+                ViewBag.SearchString = searchString;
+                ViewBag.CategoryTitle = "Kết quả tìm kiếm cho: \"" + searchString + "\"";
+            }
+
             // 3. Trả về danh sách sách đã được lọc
             return View(books.ToList());
         }
-        
-        
+
+
 
 
 

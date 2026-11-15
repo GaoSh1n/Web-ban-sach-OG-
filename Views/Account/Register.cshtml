@@ -2,20 +2,21 @@
 
 @{
     ViewBag.Title = "Đăng Ký Tài Khoản";
-    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
 }
 <style>
     /* Ép ô nhập liệu rộng 100% bằng với nút bấm */
     .card-body input,
     .card-body textarea,
-    .card-body .form-control {
+    .card-body .form-control,
+    .card-body .input-group {
         max-width: 100% !important;
         width: 100% !important;
     }
 </style>
 <div class="row justify-content-center">
     <div class="col-md-7 col-lg-6">
-        <div class="card shadow-sm border-0 my-3">
+        <div class="card shadow-sm border-0 my-4">
             <div class="card-header bg-dark text-white text-center py-3">
                 <h4 class="font-weight-bold mb-0"><i class="fas fa-user-plus mr-2"></i>Đăng Ký Tài Khoản</h4>
             </div>
@@ -31,38 +32,73 @@
                 {
                     <div class="form-group">
                         <label class="font-weight-bold">Họ và tên <span class="text-danger">*</span></label>
-                        @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", @placeholder = "Nhập Họ và tên", @required = "required" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", @placeholder = "Nhập Họ và tên", @required = "required" })
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Tên tài khoản (Username) <span class="text-danger">*</span></label>
-                        @Html.TextBoxFor(m => m.TenTaiKhoan, new { @class = "form-control", @placeholder = "Tên đăng nhập viết liền không dấu", @required = "required" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            @Html.TextBoxFor(m => m.TenTaiKhoan, new { @class = "form-control", @placeholder = "Tên đăng nhập viết liền không dấu", @required = "required" })
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Mật khẩu <span class="text-danger">*</span></label>
-                        @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control", @placeholder = "Nhập mật khẩu", @required = "required" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            </div>
+                            @Html.PasswordFor(m => m.MatKhau, new { @class = "form-control", @placeholder = "Nhập mật khẩu", @required = "required" })
+                        </div>
                     </div>
 
                     <!-- Xác nhận mật khẩu -->
                     <div class="form-group">
                         <label class="font-weight-bold">Xác nhận mật khẩu <span class="text-danger">*</span></label>
-                        <input type="password" name="NhapLaiMatKhau" class="form-control" placeholder="Nhập lại mật khẩu" required />
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-check-double"></i></span>
+                            </div>
+                            <input type="password" name="NhapLaiMatKhau" class="form-control" placeholder="Nhập lại mật khẩu" required />
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Số điện thoại</label>
-                        @Html.TextBoxFor(m => m.DienThoai, new { @class = "form-control", @placeholder = "Nhập Số điện thoại" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            </div>
+                            @Html.TextBoxFor(m => m.DienThoai, new { @class = "form-control", @placeholder = "Nhập Số điện thoại" })
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Email</label>
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "Nhập mail của bạn" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email", @placeholder = "Nhập mail của bạn" })
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-bold">Địa chỉ giao hàng mặc định</label>
-                        @Html.TextAreaFor(m => m.DiaChi, new { @class = "form-control", @rows = "2", @placeholder = "Nhập địa chỉ của bạn" })
+                        <div class="input-group w-100">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            </div>
+                            @Html.TextAreaFor(m => m.DiaChi, new { @class = "form-control", @rows = "2", @placeholder = "Nhập địa chỉ của bạn" })
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block py-2 font-weight-bold mt-4 shadow-sm">
