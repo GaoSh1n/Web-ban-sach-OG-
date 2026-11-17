@@ -2,13 +2,14 @@
 
 @{
     ViewBag.Title = "Xác Nhận Đặt Hàng";
-    Layout = "~/Views/Shared/_MyLayout.cshtml";
+    Layout = "~/Views/Shared/_PaymentLayout.cshtml";
     var cartItems = ViewBag.CartItems as List<Web_Ban_Sach.Models.CartItem>;
     decimal totalAmount = ViewBag.TotalAmount != null ? (decimal)ViewBag.TotalAmount : 0;
 }
 
 <div class="row">
-    <!-- Cột trái: Thông tin nhận hàng -->
+
+    <!--Bên trái-->
     <div class="col-lg-7 mb-4">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-dark text-white py-3">
@@ -31,7 +32,7 @@
                                placeholder="Số điện thoại nhận hàng" required />
                     </div>
 
-                    <!-- Địa chỉ nhận hàng -->
+                    <!--Địa chỉ-->
                     <div class="form-group">
                         <label class="font-weight-bold">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
                         <textarea name="DiaChiNhan" class="form-control" rows="3"
@@ -41,7 +42,7 @@
                     <div class="form-group mb-3">
                         <label class="font-weight-bold">Phương thức thanh toán</label>
                         <div class="p-3 border rounded bg-light">
-                            <!-- 1. Thanh toán COD -->
+                            <!--Cod-->
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="COD" checked>
                                 <label class="form-check-label font-weight-bold text-dark" for="cod">
@@ -49,7 +50,7 @@
                                 </label>
                             </div>
 
-                            <!-- 2. Thanh toán quét mã QR -->
+                            <!--  QR -->
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="vietqr" value="VietQR">
                                 <label class="form-check-label font-weight-bold text-dark" for="vietqr">
@@ -67,7 +68,7 @@
         </div>
     </div>
 
-    <!-- Cột phải: Tóm tắt đơn hàng -->
+    <!-- phải: Tóm tắt -->
     <div class="col-lg-5">
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-light py-3 border-bottom">

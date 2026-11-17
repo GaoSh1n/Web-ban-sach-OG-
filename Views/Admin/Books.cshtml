@@ -51,11 +51,14 @@
                                 <a href="@Url.Action("EditBook", "Admin", new { id = item.MaSach })" class="btn btn-primary btn-sm mr-1">
                                     <i class="fas fa-edit"></i> Sửa
                                 </a>
-                                <a href="@Url.Action("DeleteBook", "Admin", new { id = item.MaSach })"
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này không?');">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </a>
+                                @if (int.Parse(Session["AdminId"].ToString()) == 1)
+                                {
+                                    <a href="@Url.Action("DeleteBook", "Admin", new { id = item.MaSach })"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa cuốn sách này không?');">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </a>
+                                }
                             </td>
                         </tr>
                     }

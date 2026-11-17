@@ -32,6 +32,9 @@ namespace Web_Ban_Sach.Controllers
                 Session["AdminId"] = admin.ID;
                 Session["AdminUsername"] = admin.Username;
                 Session["AdminRole"] = admin.Role;
+                Session["Customer"] = null;
+                Session["CustomerId"] = null;
+                Session["CustomerName"] = null;
                 return RedirectToAction("Books");
             }
             ViewBag.Error = "Tên tài khoảng hoặc mật khẩu khống đúng.";

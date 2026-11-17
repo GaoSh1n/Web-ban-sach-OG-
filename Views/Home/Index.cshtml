@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Trang Chủ";
-    Layout = "~/Views/Shared/_MyLayout.cshtml"; // Hoặc _Layout.cshtml tùy file layout bạn đang dùng
+    Layout = "~/Views/Shared/_MyLayout.cshtml"; 
 }
 
 <!-- Tiêu đề đầu trang -->
@@ -25,7 +25,7 @@
 }
 else
 {
-    <!-- Lưới hiển thị sản phẩm (Mỗi hàng 3 cuốn sách trên màn hình máy tính) -->
+    <!-- (Mỗi hàng 3 cuốn sách trên màn hình máy tính) -->
     <div class="row">
         @foreach (var item in Model)
         {
@@ -40,7 +40,7 @@ else
                              ? item.HinhAnh.Trim()
                              : Url.Content("~/Images/" + System.IO.Path.GetFileName(item.HinhAnh.Trim()));
 
-                            <img src="@imgUrl" class="card-img-top p-3" style="height: 220px; object-fit: contain;" alt="@item.TenSach" />
+                            <img src="@imgUrl" class="card-img-top p-3 " style="height: 220px ;object-fit: contain;" alt="@item.TenSach" />
                         }
                         else
                         {

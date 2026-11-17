@@ -12,8 +12,6 @@ namespace Web_Ban_Sach.Controllers
 
         private DBWebBanSachEntities db = new DBWebBanSachEntities();
 
-        // GET: Account
-
         [HttpGet]
         public ActionResult Register()
         {
@@ -40,7 +38,7 @@ namespace Web_Ban_Sach.Controllers
 
             db.Customers.Add(customer);
             db.SaveChanges();
-            // Đăng ký thành công -> chuyển sang trang Đăng nhập
+            // Đăng ký thành công 
             TempData["SuccessMessage"] = "Đăng ký tài khoản thành công! Vui lòng đăng nhập.";
             return RedirectToAction("Login");
 
@@ -83,6 +81,9 @@ namespace Web_Ban_Sach.Controllers
                         db.SaveChanges();
                     }
                 }
+                Session["AdminId"] = null;
+                Session["AdminUsername"] = null;
+                Session["AdminRole"] = null;
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không chính xác.";
